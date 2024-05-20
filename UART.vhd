@@ -16,7 +16,7 @@ CONSTANT CYCLE : INTEGER := 234;
 
 SIGNAL rx0 : STD_LOGIC;
 SIGNAL rx1 : STD_LOGIC;
-SIGNAL rxNeg : STD_LOGIC := rx1 AND NOT rx0;
+SIGNAL rxNeg : STD_LOGIC;
 SIGNAL rxBit : STD_LOGIC_VECTOR (7 DOWNTO 0);
 
 SIGNAL rxCycle : UNSIGNED (15 DOWNTO 0) := (OTHERS => '0');
@@ -44,6 +44,7 @@ BEGIN
 
     PROCESS(ALL) IS
     BEGIN
+        rxNeg <= rx1 AND NOT rx0;
         CASE status IS
             WHEN RIDLE => IF rxNeg THEN
                             nextStateRx <= RSTART;
@@ -81,7 +82,7 @@ BEGIN
                 rx_data_valid <= '0';
             ELSIF (status = RSTOP AND nextStateRx /= status) THEN
                 rx_data_valid <= '1';
-            ELSIF (status = RDATA AND ?? rx_data_ready) THEN
+            ELSIF (status = RDATA AND rx_data_ready = '1') THEN
                 rx_data_valid <= '0';
             END IF;
         END IF;
