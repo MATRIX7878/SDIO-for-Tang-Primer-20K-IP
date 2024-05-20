@@ -20,7 +20,7 @@ SIGNAL tx_data_ready : STD_LOGIC;
 SIGNAL tx_data_valid : STD_LOGIC;
 
 SIGNAL tx_data : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
-SIGNAL tx_str : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
+SIGNAL tx_str : STD_LOGIC_VECTOR (23 DOWNTO 0) := (OTHERS => '0');
 
 SIGNAL tx_cnt : UNSIGNED (7 DOWNTO 0) := (OTHERS => '0');
 
@@ -58,7 +58,7 @@ BEGIN
         ELSE
             CASE status IS
                 WHEN IDLE => status <= SEND;
-                WHEN SEND => tx_data <= tx_str;
+                WHEN SEND => tx_data <= tx_str(7 DOWNTO 0) sll 8;
                              IF (tx_data_valid = '1' AND tx_data_ready = '1' AND tx_cnt < 8) THEN
                                  tx_cnt <= tx_cnt + '1';
                              ELSIF tx_data_valid AND tx_data_ready THEN
@@ -86,9 +86,9 @@ BEGIN
     VARIABLE data : INTEGER;
     BEGIN
         data := 8 * (8 - TO_INTEGER(tx_cnt));
-        tx_str <= send_data(data+7 DOWNTO data);
-        tx_str <= X"0D";
-        tx_str <= X"0A";
+        tx_str(7 DOWNTO 0) <= send_data(data+7 DOWNTO data);
+        tx_str(15 DOWNTO 8) <= X"0D";
+        tx_str(23 DOWNTO 16) <= X"0A";
     END PROCESS; 
 
     UART_RX : UARTRX PORT MAP (clk, RST, rx_data_ready, RX, rx_data_valid, rx_data);
