@@ -81,7 +81,7 @@ BEGIN
                 rx_data_valid <= '0';
             ELSIF (status = RSTOP AND nextStateRx /= status) THEN
                 rx_data_valid <= '1';
-            ELSIF (status = RDATA AND ?? rx_data_ready) THEN
+            ELSIF (status = RDATA AND rx_data_ready = '1') THEN
                 rx_data_valid <= '0';
             END IF;
         END IF;
