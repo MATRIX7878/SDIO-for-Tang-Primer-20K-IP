@@ -58,7 +58,7 @@ BEGIN
         ELSE
             CASE status IS
                 WHEN IDLE => status <= SEND;
-                WHEN SEND => tx_data <= tx_str(7 DOWNTO 0) sll 8;
+                WHEN SEND => tx_data <= tx_str(7 DOWNTO 0) SLL 8;
                              IF (tx_data_valid = '1' AND tx_data_ready = '1' AND tx_cnt < 8) THEN
                                  tx_cnt <= tx_cnt + '1';
                              ELSIF tx_data_valid AND tx_data_ready THEN
