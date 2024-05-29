@@ -85,7 +85,7 @@ BEGIN
     PROCESS(ALL) IS
     VARIABLE data : INTEGER;
     BEGIN
-        data := 8 * (8 - TO_INTEGER(tx_cnt));
+        data := 8 * (7 - TO_INTEGER(tx_cnt));
         tx_str(7 DOWNTO 0) <= send_data(data+7 DOWNTO data);
         tx_str(15 DOWNTO 8) <= X"0D";
         tx_str(23 DOWNTO 16) <= X"0A";

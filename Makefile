@@ -3,9 +3,11 @@
 # https://github.com/ghdl/ghdl
 
 PROJECT = uart
+PROJECT = toplevel
 
 TB       = tb_$(PROJECT)
-SOURCES  = UART.vhd
+SOURCES += UART.vhd
+SOURCES += toplevel.vhd
 SOURCES += $(TB).vhd
 SAVE     = $(TB).gtkw
 WAVE     = $(TB).ghw
