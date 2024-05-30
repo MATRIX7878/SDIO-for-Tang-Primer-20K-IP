@@ -227,7 +227,7 @@ BEGIN
                 txBit <= (OTHERS => '0');
             ELSIF (trans = SEND) THEN
                 IF txCycle = CYCLE - 1 THEN
-                    txBit <= txBit + '1';
+                    txBit <= txBit + 1;
                 ELSE
                     txBit <= txBit;
                 END IF;
@@ -242,7 +242,7 @@ BEGIN
             ELSIF ((trans = SEND AND txCycle = CYCLE - 1) OR nextStateTx /= trans) THEN
                 txCycle <= (OTHERS => '0');
             ELSE
-                txCycle <= txCycle + '1';
+                txCycle <= txCycle + 1;
             END IF;
         END IF;
 
