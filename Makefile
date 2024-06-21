@@ -21,7 +21,7 @@ WAVE     = $(TB).ghw
 sim: $(SOURCES)
 	ghdl -i --std=08 $(SOURCES)
 	ghdl -m --std=08 $(TB)
-	ghdl -r --std=08 $(TB) --wave=$(WAVE) --stop-time=30us
+	ghdl -r --std=08 $(TB) --wave=$(WAVE) --stop-time=120us
 
 
 $WAVE): sim

@@ -71,6 +71,19 @@ begin
       );
 
    test_proc : process
+      procedure send(arg : std_logic_vector) is
+      begin
+         tx_data       <= arg;
+         tx_data_valid <= '1';
+         wait until rising_edge(clk);
+
+         while tx_data_ready = '0' loop
+            wait until rising_edge(clk);
+         end loop;
+
+         tx_data_valid <= '0';
+         wait until rising_edge(clk);
+      end procedure send;
    begin
       rx_data_ready <= '1';
       tx_data_valid <= '0';
@@ -78,19 +91,18 @@ begin
       wait until rising_edge(clk);
       wait until rising_edge(clk);
 
-      tx_data       <= X"53";
-      tx_data_valid <= '1';
-      wait until rising_edge(clk);
-
-      while tx_data_ready = '0' loop
-         wait until rising_edge(clk);
-      end loop;
-
-      tx_data_valid <= '0';
-      wait until rising_edge(clk);
+      send(X"53");
 
       wait until rx_data_valid = '1';
       assert rx_data = X"53";
+
+      wait for 10 us;
+      wait until rising_edge(clk);
+
+      send(X"54");
+
+      wait until rx_data_valid = '1';
+      assert rx_data = X"54";
 
       wait until rising_edge(clk);
       report "Test finished";

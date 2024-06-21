@@ -1,22 +1,22 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Wed May 29 18:46:02 2024
+[*] Fri Jun 21 07:03:39 2024
 [*]
 [dumpfile] "/home/mike/git/MJoergen/UART-for-Tang-Primer-20K/tb_toplevel.ghw"
-[dumpfile_mtime] "Wed May 29 18:44:43 2024"
-[dumpfile_size] 71403
+[dumpfile_mtime] "Fri Jun 21 07:03:27 2024"
+[dumpfile_size] 359730
 [savefile] "/home/mike/git/MJoergen/UART-for-Tang-Primer-20K/tb_toplevel.gtkw"
 [timestart] 0
-[size] 1000 600
+[size] 1694 825
 [pos] -1 -1
-*-33.219280 4240000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-34.281467 4240000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] top.
 [treeopen] top.tb_toplevel.
 [treeopen] top.tb_toplevel.toplevel_inst.
 [sst_width] 249
 [signals_width] 256
 [sst_expanded] 1
-[sst_vpaned_height] 143
+[sst_vpaned_height] 217
 @c00200
 -tb
 @28
@@ -36,7 +36,7 @@ top.tb_toplevel.tx_data_valid
 #{top.tb_toplevel.tx_data[7:0]} top.tb_toplevel.tx_data[7] top.tb_toplevel.tx_data[6] top.tb_toplevel.tx_data[5] top.tb_toplevel.tx_data[4] top.tb_toplevel.tx_data[3] top.tb_toplevel.tx_data[2] top.tb_toplevel.tx_data[1] top.tb_toplevel.tx_data[0]
 @1401200
 -tb
-@800201
+@800200
 -toplevel
 @29
 top.tb_toplevel.toplevel_inst.clk
@@ -55,10 +55,8 @@ top.tb_toplevel.toplevel_inst.tx_data_valid
 @421
 top.tb_toplevel.toplevel_inst.status
 @23
-#{top.tb_toplevel.toplevel_inst.tx_str[23:0]} top.tb_toplevel.toplevel_inst.tx_str[23] top.tb_toplevel.toplevel_inst.tx_str[22] top.tb_toplevel.toplevel_inst.tx_str[21] top.tb_toplevel.toplevel_inst.tx_str[20] top.tb_toplevel.toplevel_inst.tx_str[19] top.tb_toplevel.toplevel_inst.tx_str[18] top.tb_toplevel.toplevel_inst.tx_str[17] top.tb_toplevel.toplevel_inst.tx_str[16] top.tb_toplevel.toplevel_inst.tx_str[15] top.tb_toplevel.toplevel_inst.tx_str[14] top.tb_toplevel.toplevel_inst.tx_str[13] top.tb_toplevel.toplevel_inst.tx_str[12] top.tb_toplevel.toplevel_inst.tx_str[11] top.tb_toplevel.toplevel_inst.tx_str[10] top.tb_toplevel.toplevel_inst.tx_str[9] top.tb_toplevel.toplevel_inst.tx_str[8] top.tb_toplevel.toplevel_inst.tx_str[7] top.tb_toplevel.toplevel_inst.tx_str[6] top.tb_toplevel.toplevel_inst.tx_str[5] top.tb_toplevel.toplevel_inst.tx_str[4] top.tb_toplevel.toplevel_inst.tx_str[3] top.tb_toplevel.toplevel_inst.tx_str[2] top.tb_toplevel.toplevel_inst.tx_str[1] top.tb_toplevel.toplevel_inst.tx_str[0]
 #{top.tb_toplevel.toplevel_inst.tx_cnt[7:0]} top.tb_toplevel.toplevel_inst.tx_cnt[7] top.tb_toplevel.toplevel_inst.tx_cnt[6] top.tb_toplevel.toplevel_inst.tx_cnt[5] top.tb_toplevel.toplevel_inst.tx_cnt[4] top.tb_toplevel.toplevel_inst.tx_cnt[3] top.tb_toplevel.toplevel_inst.tx_cnt[2] top.tb_toplevel.toplevel_inst.tx_cnt[1] top.tb_toplevel.toplevel_inst.tx_cnt[0]
-#{top.tb_toplevel.toplevel_inst.send_data[63:0]} top.tb_toplevel.toplevel_inst.send_data[63] top.tb_toplevel.toplevel_inst.send_data[62] top.tb_toplevel.toplevel_inst.send_data[61] top.tb_toplevel.toplevel_inst.send_data[60] top.tb_toplevel.toplevel_inst.send_data[59] top.tb_toplevel.toplevel_inst.send_data[58] top.tb_toplevel.toplevel_inst.send_data[57] top.tb_toplevel.toplevel_inst.send_data[56] top.tb_toplevel.toplevel_inst.send_data[55] top.tb_toplevel.toplevel_inst.send_data[54] top.tb_toplevel.toplevel_inst.send_data[53] top.tb_toplevel.toplevel_inst.send_data[52] top.tb_toplevel.toplevel_inst.send_data[51] top.tb_toplevel.toplevel_inst.send_data[50] top.tb_toplevel.toplevel_inst.send_data[49] top.tb_toplevel.toplevel_inst.send_data[48] top.tb_toplevel.toplevel_inst.send_data[47] top.tb_toplevel.toplevel_inst.send_data[46] top.tb_toplevel.toplevel_inst.send_data[45] top.tb_toplevel.toplevel_inst.send_data[44] top.tb_toplevel.toplevel_inst.send_data[43] top.tb_toplevel.toplevel_inst.send_data[42] top.tb_toplevel.toplevel_inst.send_data[41] top.tb_toplevel.toplevel_inst.send_data[40] top.tb_toplevel.toplevel_inst.send_data[39] top.tb_toplevel.toplevel_inst.send_data[38] top.tb_toplevel.toplevel_inst.send_data[37] top.tb_toplevel.toplevel_inst.send_data[36] top.tb_toplevel.toplevel_inst.send_data[35] top.tb_toplevel.toplevel_inst.send_data[34] top.tb_toplevel.toplevel_inst.send_data[33] top.tb_toplevel.toplevel_inst.send_data[32] top.tb_toplevel.toplevel_inst.send_data[31] top.tb_toplevel.toplevel_inst.send_data[30] top.tb_toplevel.toplevel_inst.send_data[29] top.tb_toplevel.toplevel_inst.send_data[28] top.tb_toplevel.toplevel_inst.send_data[27] top.tb_toplevel.toplevel_inst.send_data[26] top.tb_toplevel.toplevel_inst.send_data[25] top.tb_toplevel.toplevel_inst.send_data[24] top.tb_toplevel.toplevel_inst.send_data[23] top.tb_toplevel.toplevel_inst.send_data[22] top.tb_toplevel.toplevel_inst.send_data[21] top.tb_toplevel.toplevel_inst.send_data[20] top.tb_toplevel.toplevel_inst.send_data[19] top.tb_toplevel.toplevel_inst.send_data[18] top.tb_toplevel.toplevel_inst.send_data[17] top.tb_toplevel.toplevel_inst.send_data[16] top.tb_toplevel.toplevel_inst.send_data[15] top.tb_toplevel.toplevel_inst.send_data[14] top.tb_toplevel.toplevel_inst.send_data[13] top.tb_toplevel.toplevel_inst.send_data[12] top.tb_toplevel.toplevel_inst.send_data[11] top.tb_toplevel.toplevel_inst.send_data[10] top.tb_toplevel.toplevel_inst.send_data[9] top.tb_toplevel.toplevel_inst.send_data[8] top.tb_toplevel.toplevel_inst.send_data[7] top.tb_toplevel.toplevel_inst.send_data[6] top.tb_toplevel.toplevel_inst.send_data[5] top.tb_toplevel.toplevel_inst.send_data[4] top.tb_toplevel.toplevel_inst.send_data[3] top.tb_toplevel.toplevel_inst.send_data[2] top.tb_toplevel.toplevel_inst.send_data[1] top.tb_toplevel.toplevel_inst.send_data[0]
-@1000201
+@1000200
 -toplevel
 [pattern_trace] 1
 [pattern_trace] 0
