@@ -44,40 +44,9 @@ END COMPONENT;
 SIGNAL status, nextStatus : state;
 
 BEGIN
-    PROCESS(clk, RST, status) IS
-    BEGIN
-       IF RISING_EDGE(clk) THEN
-        IF RST = '0' THEN
-            tx_data <= (OTHERS => '0');
-            status <= IDLE;
-            tx_cnt <= (OTHERS => '0');
-            tx_data_valid <= '0';
-        ELSE
-            CASE status IS
-                WHEN IDLE => nextStatus <= RECIEVE;
-                WHEN SEND => IF (tx_data_valid = '1' AND tx_data_ready = '1' AND tx_cnt < 8) THEN
-                                 tx_cnt <= tx_cnt + 1;
-                             ELSIF tx_data_valid AND tx_data_ready THEN
-                                 tx_cnt <= (OTHERS => '0');
-                                 tx_data_valid <= '0';
-                                 nextStatus <= RECIEVE;
-                             ELSIF NOT tx_data_valid THEN
-                                 tx_data_valid <= '1';
-                             END IF;
-                WHEN RECIEVE => IF rx_data_valid = '1' THEN
-                                    tx_data_valid <= '1';
-                                    tx_data <= rx_data;
-                                ELSIF tx_data_valid AND tx_data_ready THEN
-                                    tx_data_valid <= '0';
-                                ELSE
-                                    nextStatus <= SEND;
-                                END IF;
-                WHEN OTHERS => nextStatus <= IDLE;
-            END CASE;
-        END IF;
-        status <= nextStatus;
-       END IF;
-    END PROCESS;
+    tx_data <= rx_data;
+    tx_data_valid <= rx_data_valid;
+    rx_data_ready <= tx_data_ready;
 
     UART_RX : UARTRX PORT MAP (clk, RST, rx_data_ready, RX, rx_data_valid, rx_data);
     UART_TX : UARTTX PORT MAP (clk, RST, tx_data_valid, tx_data, tx_data_ready, TX);
