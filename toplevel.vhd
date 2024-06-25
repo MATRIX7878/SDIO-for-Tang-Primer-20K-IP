@@ -2,6 +2,15 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 
+--ENTITY toplevel IS
+--    PORT(clk, RST, det : IN STD_LOGIC;
+--         RX : IN STD_LOGIC;
+--         TX, led : OUT STD_LOGIC;
+--         CMD : INOUT STD_LOGIC;
+--         DAT : INOUT STD_LOGIC_VECTOR (3 DOWNTO 0)
+--    );
+--END ENTITY;
+
 ENTITY toplevel IS
     PORT(clk, RST : IN STD_LOGIC;
          RX : IN STD_LOGIC;
@@ -21,8 +30,6 @@ SIGNAL tx_data_valid : STD_LOGIC;
 
 SIGNAL tx_data : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
 
-SIGNAL tx_cnt : UNSIGNED (7 DOWNTO 0) := (OTHERS => '0');
-
 TYPE state IS (IDLE, SEND, RECIEVE);
 
 COMPONENT UARTRX IS
@@ -41,6 +48,12 @@ COMPONENT UARTTX IS
     );
 END COMPONENT;
 
+--COMPONENT SDDET IS
+--    PORT(DET : IN STD_LOGIC;
+--         LED : OUT STD_LOGIC
+--        );
+--END COMPONENT;
+
 SIGNAL status, nextStatus : state;
 
 BEGIN
@@ -48,6 +61,8 @@ BEGIN
     tx_data_valid <= rx_data_valid;
     rx_data_ready <= tx_data_ready;
 
-    UART_RX : UARTRX PORT MAP (clk, RST, rx_data_ready, RX, rx_data_valid, rx_data);
-    UART_TX : UARTTX PORT MAP (clk, RST, tx_data_valid, tx_data, tx_data_ready, TX);
+    UART_RX : UARTRX PORT MAP (clk => clk, RST => RST, rx_data => rx_data, rx_data_valid => rx_data_valid, rx_data_ready => rx_data_ready, rx_pin => RX);
+    UART_TX : UARTTX PORT MAP (clk => clk, RST => RST, tx_data => tx_data, tx_data_valid => tx_data_valid, tx_data_ready => tx_data_ready, tx_pin => TX);
+
+--    CARD : SDDET PORT MAP (det => DET, led => LED);
 END ARCHITECTURE;
