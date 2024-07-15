@@ -2,67 +2,49 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
 
---ENTITY toplevel IS
---    PORT(clk, RST, det : IN STD_LOGIC;
---         RX : IN STD_LOGIC;
---         TX, led : OUT STD_LOGIC;
---         CMD : INOUT STD_LOGIC;
---         DAT : INOUT STD_LOGIC_VECTOR (3 DOWNTO 0)
---    );
---END ENTITY;
-
 ENTITY toplevel IS
-    PORT(clk, RST : IN STD_LOGIC;
-         RX : IN STD_LOGIC;
-         TX : OUT STD_LOGIC
+    PORT(clk, RST, det : IN STD_LOGIC;
+         RX : IN STD_LOGIC_VECTOR (8 DOWNTO 0);
+         led : OUT STD_LOGIC;
+         TX : OUT STD_LOGIC_VECTOR (9 DOWNTO 0);
+         CMD : INOUT STD_LOGIC;
+         DAT : INOUT STD_LOGIC_VECTOR (3 DOWNTO 0)
     );
 END ENTITY;
 
 ARCHITECTURE behavior OF toplevel IS
 
-SIGNAL rx_data_ready : STD_LOGIC := '1';
-SIGNAL rx_data_valid : STD_LOGIC;
+SIGNAL oclk : STD_LOGIC;
+SIGNAL busy : STD_LOGIC;
 
-SIGNAL rx_data : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
+COMPONENT SDDET IS
+    PORT(DET : IN STD_LOGIC;
+         LED : OUT STD_LOGIC
+        );
+END COMPONENT;
 
-SIGNAL tx_data_ready : STD_LOGIC;
-SIGNAL tx_data_valid : STD_LOGIC;
-
-SIGNAL tx_data : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
-
-TYPE state IS (IDLE, SEND, RECIEVE);
+COMPONENT clockdiv IS
+    PORT(iclk, clr : IN STD_LOGIC;
+         oclk : OUT STD_LOGIC);
+END COMPONENT;
 
 COMPONENT UARTRX IS
-    PORT(clk, RST : IN STD_LOGIC;
-         rx_data_ready, rx_pin: IN STD_LOGIC;
-         rx_data_valid : OUT STD_LOGIC;
-         rx_data : OUT STD_LOGIC_VECTOR (7 DOWNTO 0)
-    );
+    PORT(baud : IN STD_LOGIC;
+         busy : OUT STD_LOGIC;
+         data : IN STD_LOGIC_VECTOR (8 DOWNTO 0)
+         );
 END COMPONENT;
 
 COMPONENT UARTTX IS
-    PORT(clk, RST : IN STD_LOGIC;
-         tx_data_valid : IN STD_LOGIC;
-         tx_data : IN STD_LOGIC_VECTOR (7 DOWNTO 0);
-         tx_data_ready, tx_pin : OUT STD_LOGIC
-    );
+    PORT(baud : IN STD_LOGIC;
+         busy : OUT STD_LOGIC;
+         data : OUT STD_LOGIC_VECTOR (9 DOWNTO 0)
+         );
 END COMPONENT;
 
---COMPONENT SDDET IS
---    PORT(DET : IN STD_LOGIC;
---         LED : OUT STD_LOGIC
---        );
---END COMPONENT;
-
-SIGNAL status, nextStatus : state;
-
 BEGIN
-    tx_data <= rx_data;
-    tx_data_valid <= rx_data_valid;
-    rx_data_ready <= tx_data_ready;
-
-    UART_RX : UARTRX PORT MAP (clk => clk, RST => RST, rx_data => rx_data, rx_data_valid => rx_data_valid, rx_data_ready => rx_data_ready, rx_pin => RX);
-    UART_TX : UARTTX PORT MAP (clk => clk, RST => RST, tx_data => tx_data, tx_data_valid => tx_data_valid, tx_data_ready => tx_data_ready, tx_pin => TX);
-
---    CARD : SDDET PORT MAP (det => DET, led => LED);
+    CARD : SDDET PORT MAP (det => DET, led => LED);
+    div : clockdiv PORT MAP (clk => iclk, RST => clr, oclk => oclk);
+    uart_rx : UARTRX PORT MAP (oclk => baud, busy => busy, RX => data);
+    uart_tx : UARTTX PORT MAP (oclk => baud, busy => busy, TX => data);
 END ARCHITECTURE;
