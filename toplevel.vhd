@@ -11,9 +11,11 @@ ENTITY toplevel IS
 END ENTITY;
 
 ARCHITECTURE behavior OF toplevel IS
+SIGNAL rx_data : STD_LOGIC_VECTOR (7 DOWNTO 0);
+SIGNAL rx_ready : STD_LOGIC;
 
-SIGNAL oclk : STD_LOGIC;
-SIGNAL triggerRX : STD_LOGIC;
+SIGNAL tx_data : STD_LOGIC_VECTOR (7 DOWNTO 0);
+SIGNAL tx_ready : STD_LOGIC;
 
 COMPONENT SDDET IS
     PORT(DET : IN STD_LOGIC;
@@ -21,26 +23,28 @@ COMPONENT SDDET IS
         );
 END COMPONENT;
 
-COMPONENT clockdiv IS
-    PORT(iclk, clr : IN STD_LOGIC;
-         oclk : OUT STD_LOGIC);
-END COMPONENT;
-
-COMPONENT UARTRX IS
-    PORT(baud, dataRX : IN STD_LOGIC;
-         triggerRX : OUT STD_LOGIC
+COMPONENT UART_RX IS
+    PORT(clk : IN  STD_LOGIC;
+         reset : IN  STD_LOGIC;
+         rx_IN : IN  STD_LOGIC;
+         rx_data : OUT STD_LOGIC_VECTOR (7 downto 0);
+         rx_ready : OUT STD_LOGIC
          );
 END COMPONENT;
 
-COMPONENT UARTTX IS
-    PORT(baud, triggerTX : IN STD_LOGIC;
-         dataTX : OUT STD_LOGIC
+COMPONENT UART_TX IS
+    PORT(clk : IN  STD_LOGIC;
+         reset : IN  STD_LOGIC;
+         tx_data : IN  STD_LOGIC_VECTOR (7 downto 0);
+         tx_ready : OUT STD_LOGIC;
+         tx_OUT : OUT STD_LOGIC
          );
 END COMPONENT;
 
 BEGIN
+    tx_data <= rx_data;
+
     CARD : SDDET PORT MAP (DET => det, LED => led);
-    div : clockdiv PORT MAP (iclk => clk, clr => RST, oclk => oclk);
-    uart_rx : UARTRX PORT MAP (baud => oclk, dataRX => RX, triggerRX => triggerRX);
-    uart_tx : UARTTX PORT MAP (baud => oclk, triggerTX => triggerRX, dataTX => TX);
+    uartrx : UART_RX PORT MAP (clk => clk, reset => RST, rx_in => RX, rx_data => rx_data, rx_ready => rx_ready);
+    uarttx : UART_TX PORT MAP (clk => clk, reset => RST, tx_data => tx_data, tx_ready => tx_ready, tx_OUT => TX);
 END ARCHITECTURE;
