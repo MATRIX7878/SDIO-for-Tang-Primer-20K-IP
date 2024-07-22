@@ -62,8 +62,7 @@ COMPONENT SDCTRL IS
     PORT (clk, clkSlow, clkFast : IN STD_LOGIC;
           led : OUT STD_LOGIC;
           CMD : INOUT STD_LOGIC_VECTOR (47 DOWNTO 0);
-          C2RESP : INOUT STD_LOGIC_VECTOR (135 DOWNTO 0);
-          DATA : INOUT STD_LOGIC_VECTOR (4095 DOWNTO 0)
+          C2RESP : INOUT STD_LOGIC_VECTOR (135 DOWNTO 0)
          );
 END COMPONENT;
 
@@ -75,5 +74,5 @@ BEGIN
     uarttx : UART_TX PORT MAP (clk => clk, reset => RST, tx_data => tx_data, tx_ready => tx_ready, tx_OUT => TX);
     TURTLE : clockSlow PORT MAP(iclk => clk, clr => RST, oslow => oslow);
     RABBIT : clockFast PORT MAP(iclk => clk, clr => RST, ofast => ofast);
-    SDINIT : SDCTRL PORT MAP (clk => clk, clkSlow => oslow, clkFast => ofast, led => led, CMD => ARGRESP, C2RESP => C2RESP, DATA => DATA);
+    SDINIT : SDCTRL PORT MAP (clk => clk, clkSlow => oslow, clkFast => ofast, led => led, CMD => ARGRESP, C2RESP => C2RESP);
 END ARCHITECTURE;
