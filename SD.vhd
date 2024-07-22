@@ -26,8 +26,7 @@ ENTITY SDCTRL IS
     PORT (clk, clkSlow, clkFast : IN STD_LOGIC;
           led : OUT STD_LOGIC;
           CMD : INOUT STD_LOGIC_VECTOR (47 DOWNTO 0);
-          C2RESP : INOUT STD_LOGIC_VECTOR (135 DOWNTO 0);
-          DATA : INOUT STD_LOGIC_VECTOR (4095 DOWNTO 0)
+          C2RESP : INOUT STD_LOGIC_VECTOR (135 DOWNTO 0)
          );
 END ENTITY;
 
@@ -52,6 +51,7 @@ SIGNAL redun7 : STD_LOGIC_VECTOR (6 DOWNTO 0);
 
 SIGNAL start, trans, stop : STD_LOGIC;
 SIGNAL cmdind : STD_LOGIC_VECTOR (5 DOWNTO 0);
+SIGNAL RCA, STAT : STD_LOGIC_VECTOR (15 DOWNTO 0);
 SIGNAL cardstat : STD_LOGIC_VECTOR (31 DOWNTO 0);
 SIGNAL cycle7 : STD_LOGIC_VECTOR (6 DOWNTO 0);
 SIGNAL CID : STD_LOGIC_VECTOR (119 DOWNTO 0);
@@ -70,14 +70,14 @@ BEGIN
                 CASE currentState IS
                 WHEN DUMMY => IF counter = 74 THEN
                         nextState <= CMD0;
-                        counter <= 39;
+                        counter <= 47;
                     ELSE
                         counter <= counter + 1;
                     END IF;
                 WHEN CMD0 => CMD(47) <= '0';
                     CMD(46) <= '1';
                     CMD(45 DOWNTO 8) <= (OTHERS => '0'); 
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -90,14 +90,14 @@ BEGIN
                     ELSE
                         CMD(7 DOWNTO 1) <= redun7(6 DOWNTO 0);
                         CMD(0) <= '1';
-                        counter <= 39;
+                        counter <= 47;
                         nextState <= CMD55;
                     END IF;
                 WHEN CMD55 => CMD(47) <= '0';
                     CMD(46) <= '1';
                     CMD(45 DOWNTO 40) <= d"55";
                     CMD(39 DOWNTO 8) <= (OTHERS => '0'); 
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -110,7 +110,7 @@ BEGIN
                     ELSE
                         CMD(7 DOWNTO 1) <= redun7(6 DOWNTO 0);
                         CMD(0) <= '1';
-                        counter <= 39;
+                        counter <= 47;
                         nextState <= CMD55RESP;
                     END IF;
                 WHEN CMD55RESP => start <= CMD(47);
@@ -118,7 +118,7 @@ BEGIN
                     cmdind <= CMD(45 DOWNTO 40);
                     cardstat <= CMD(39 DOWNTO 8);
                     cycle7 <= CMD(7 DOWNTO 1);
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -129,7 +129,7 @@ BEGIN
                         counter <= counter - 1;
                         nextState <= CMD55RESP;
                     ELSE
-                        counter <= 39;
+                        counter <= 47;
                         IF redun7 = cycle7 THEN
                             stop <= CMD(0);
                             nextState <= ACMD41;
@@ -143,7 +143,7 @@ BEGIN
                     CMD(46) <= '1';
                     CMD(45 DOWNTO 40) <= d"41";
                     CMD(39 DOWNTO 8) <= (OTHERS => '0');
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -156,7 +156,7 @@ BEGIN
                     ELSE
                         CMD(7 DOWNTO 1) <= redun7(6 DOWNTO 0);
                         CMD(0) <= '1';
-                        counter <= 39;
+                        counter <= 47;
                         nextState <= ACMD41RESP;
                     END IF;
                 WHEN ACMD41RESP => start <= CMD(47);
@@ -178,7 +178,7 @@ BEGIN
                     CMD(46) <= '1';
                     CMD(45 DOWNTO 40) <= TO_STDLOGICVECTOR(2, 6);
                     CMD(39 DOWNTO 8) <= (OTHERS => '0'); 
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -191,7 +191,7 @@ BEGIN
                     ELSE
                         CMD(7 DOWNTO 1) <= redun7(6 DOWNTO 0);
                         CMD(0) <= '1';
-                        counter <= 119;
+                        counter <= 135;
                         nextState <= CMD2RESP;
                     END IF;
                 WHEN CMD2RESP => start <= C2RESP(135);
@@ -200,7 +200,7 @@ BEGIN
                     CSD <= C2RESP(127 DOWNTO 1);
                     CID <= C2RESP(127 DOWNTO 8);
                     cycle7 <= C2RESP(7 DOWNTO 1);
-                    IF counter = 119 THEN
+                    IF counter = 135 THEN
                         CLR <= '1';
                         args <= CID(counter);
                         counter <= counter - 1;
@@ -211,7 +211,7 @@ BEGIN
                         counter <= counter - 1;
                         nextState <= CMD2RESP;
                     ELSE
-                        counter <= 39;
+                        counter <= 47;
                         IF redun7 = cycle7 THEN
                             stop <= C2RESP(0);
                             nextState <= CMD3;
@@ -226,7 +226,7 @@ BEGIN
                     CMD(46) <= '1';
                     CMD(45 DOWNTO 40) <= TO_STDLOGICVECTOR(3, 6);
                     CMD(39 DOWNTO 8) <= (OTHERS => '0'); 
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -245,9 +245,10 @@ BEGIN
                 WHEN CMD3RESP => start <= CMD(47);
                     trans <= CMD(46);
                     cmdind <= CMD(45 DOWNTO 40);
-                    cardstat <= CMD(39 DOWNTO 8);
+                    RCA <= CMD(39 DOWNTO 24);
+                    STAT <= CMD(23 DOWNTO 8);
                     cycle7 <= CMD(7 DOWNTO 1);
-                    IF counter = 39 THEN
+                    IF counter = 47 THEN
                         CLR <= '1';
                         args <= CMD(counter);
                         counter <= counter - 1;
@@ -258,7 +259,7 @@ BEGIN
                         counter <= counter - 1;
                         nextState <= CMD3RESP;
                     ELSE
-                        counter <= 39;
+                        counter <= 47;
                         IF redun7 = cycle7 THEN
                             stop <= CMD(0);
                             nextState <= CMD3;
