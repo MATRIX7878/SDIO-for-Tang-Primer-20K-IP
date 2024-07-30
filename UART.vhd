@@ -16,7 +16,7 @@ SIGNAL currentState, nextState : state;
 
 CONSTANT BAUD : STD_LOGIC_VECTOR (7 DOWNTO 0) := d"234";
 
-SIGNAL bits : INTEGER RANGE 0 TO 7 := 0;
+SIGNAL bits : INTEGER RANGE 7 DOWNTO 0:= 7;
 SIGNAL counter : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
 
 BEGIN
@@ -24,42 +24,39 @@ BEGIN
     BEGIN
         IF RISING_EDGE(clk) THEN
             IF NOT reset THEN
-                nextState <= IDLE;
-            ELSE
-                nextState <= nextState;
+                CASE currentState IS
+                WHEN IDLE => IF tx_ready = '1' THEN
+                    tx_OUT <= '1';
+                    nextState <= START;
+                END IF;
+                WHEN START => IF counter = BAUD THEN
+                    tx_OUT <= '0';
+                    counter <= (OTHERS => '0');
+                    nextState <= SEND;
+                ELSE
+                    counter <= counter + '1';
+                END IF;
+                WHEN SEND => IF counter = BAUD AND bits = 0 THEN
+                    tx_OUT <= tx_data(bits);
+                    counter <= (OTHERS => '0');
+                    nextState <= STOP;
+                ELSIF counter = BAUD AND bits > 0 THEN
+                    tx_OUT <= tx_data(bits);
+                    counter <= (OTHERS => '0');
+                    bits <= bits - 1;
+                ELSE
+                    counter <= counter + '1';
+                END IF;
+                WHEN STOP => IF counter = BAUD THEN
+                    bits <= 7;
+                    tx_OUT <= '1';
+                    counter <= (OTHERS => '0');
+                    nextState <= IDLE;
+                ELSE
+                    counter <= counter + '1';
+                END IF;
+                END CASE;
             END IF;
-
-            CASE currentState IS
-            WHEN IDLE => IF tx_ready = '1' THEN
-                tx_OUT <= '1';
-                nextState <= START;
-            END IF;
-            WHEN START => IF counter = BAUD THEN
-                tx_OUT <= '0';
-                counter <= (OTHERS => '0');
-                nextState <= SEND;
-            ELSE
-                counter <= counter + '1';
-            END IF;
-            WHEN SEND => IF counter = BAUD AND bits = 8 THEN
-                counter <= (OTHERS => '0');
-                bits <= 0;
-                nextState <= STOP;
-            ELSIF counter = BAUD AND bits < 8 THEN
-                tx_OUT <= tx_data(bits);
-                counter <= (OTHERS => '0');
-                bits <= bits + 1;
-            ELSE
-                counter <= counter + '1';
-            END IF;
-            WHEN STOP => IF counter = BAUD THEN
-                tx_OUT <= '1';
-                counter <= (OTHERS => '0');
-                nextState <= IDLE;
-            ELSE
-                counter <= counter + '1';
-            END IF;
-            END CASE;
         END IF;
     END PROCESS;
 
@@ -90,7 +87,7 @@ SIGNAL currentState, nextState : state;
 
 CONSTANT BAUD : STD_LOGIC_VECTOR (7 DOWNTO 0) := d"234";
 
-SIGNAL bits : INTEGER RANGE 0 TO 7 := 0;
+SIGNAL bits : INTEGER RANGE 7 DOWNTO 0 := 7;
 SIGNAL counter : STD_LOGIC_VECTOR (7 DOWNTO 0) := (OTHERS => '0');
 
 BEGIN
@@ -98,41 +95,38 @@ BEGIN
     BEGIN
         IF RISING_EDGE(clk) THEN
             IF NOT reset THEN
-                nextState <= IDLE;
-            ELSE
-                nextState <= nextState;
+                CASE currentState IS
+                WHEN IDLE => IF NOT rx_IN THEN
+                    rx_ready <= '0';
+                    nextState <= START;
+                END IF;
+                WHEN START => IF counter = BAUD / 2 THEN
+                    counter <= (OTHERS => '0');
+                    nextState <= RECEIVE;
+                ELSE
+                    counter <= counter + '1';
+                END IF;
+                WHEN RECEIVE => IF counter = BAUD AND bits = 0 THEN
+                    rx_data(bits) <= rx_IN;
+                    counter <= (OTHERS => '0');
+                    nextState <= STOP;
+                ELSIF counter = BAUD AND bits > 0 THEN
+                    rx_data(bits) <= rx_IN;
+                    counter <= (OTHERS => '0');
+                    bits <= bits - 1;
+                ELSE
+                    counter <= counter + '1';
+                END IF;
+                WHEN STOP => IF counter = BAUD / 2 THEN
+                    bits <= 7;
+                    rx_ready <= '1';
+                    counter <= (OTHERS => '0');
+                    nextState <= IDLE;
+                ELSE
+                    counter <= counter + '1';
+                END IF;
+                END CASE;
             END IF;
-
-            CASE currentState IS
-            WHEN IDLE => IF NOT rx_IN THEN
-                rx_ready <= '0';
-                nextState <= START;
-            END IF;
-            WHEN START => IF counter = BAUD THEN
-                counter <= (OTHERS => '0');
-                nextState <= RECEIVE;
-            ELSE
-                counter <= counter + '1';
-            END IF;
-            WHEN RECEIVE => IF counter = BAUD AND bits = 8 THEN
-                counter <= (OTHERS => '0');
-                bits <= 0;
-                nextState <= STOP;
-            ELSIF counter = BAUD AND bits < 8 THEN
-                rx_data(bits) <= rx_IN;
-                counter <= (OTHERS => '0');
-                bits <= bits + 1;
-            ELSE
-                counter <= counter + '1';
-            END IF;
-            WHEN STOP => IF counter = BAUD / 2 THEN
-                rx_ready <= '1';
-                counter <= (OTHERS => '0');
-                nextState <= IDLE;
-            ELSE
-                counter <= counter + '1';
-            END IF;
-            END CASE;
         END IF;
     END PROCESS;
 
