@@ -14,9 +14,6 @@ ARCHITECTURE behavior OF toplevel IS
 SIGNAL rx_data : STD_LOGIC_VECTOR (7 DOWNTO 0);
 SIGNAL rx_ready : STD_LOGIC;
 
-SIGNAL tx_data : STD_LOGIC_VECTOR (7 DOWNTO 0);
-SIGNAL tx_ready : STD_LOGIC;
-
 SIGNAL oslow : STD_LOGIC;
 SIGNAL ofast : STD_LOGIC;
 
@@ -68,7 +65,7 @@ END COMPONENT;
 
 BEGIN
     --CARD : SDDET PORT MAP (DET => det, LED => led);
-    uartrx : UART_RX PORT MAP (clk => clk, reset => RST, rx_in => RX, rx_ready => rx_ready, rx_data => rx_data);
+    uartrx : UART_RX PORT MAP (clk => clk, reset => RST, rx_IN   => RX, rx_ready => rx_ready, rx_data => rx_data);
     uarttx : UART_TX PORT MAP (clk => clk, reset => RST, tx_data => rx_data, tx_ready => rx_ready, tx_OUT => TX);
     TURTLE : clockSlow PORT MAP(iclk => clk, clr => RST, oslow => oslow);
     RABBIT : clockFast PORT MAP(iclk => clk, clr => RST, ofast => ofast);
