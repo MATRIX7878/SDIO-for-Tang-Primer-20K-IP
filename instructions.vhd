@@ -1,0 +1,3 @@
+PACKAGE instructions IS
+    TYPE SDCMDS IS (CMD0);
+END PACKAGE;
